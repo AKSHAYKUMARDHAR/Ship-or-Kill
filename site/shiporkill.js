@@ -5,7 +5,7 @@
 //   plan(params)      -> sample size, days and guardrail checks for a planned test
 //   naive(request), naiveGuard(request) -> the two baseline rules the benchmark compares against
 
-export const VERSION = "1.0";
+export const VERSION = "1.1";
 
 export const RULES = {
   srmFail: 0.001,          // sample ratio mismatch: fail below this p-value (overall or any segment)
@@ -109,6 +109,8 @@ const pts = (x, signed = true) => {
 const pct = (x, digits = 1) => (x * 100).toFixed(digits) + "%";
 const relTxt = (x) => (x > 0 ? "+" : "") + (x * 100).toFixed(1) + "%";
 export const fmtP = (p) => (p < 0.0001 ? "< 0.0001" : p < 0.001 ? p.toExponential(1) : p.toFixed(p < 0.01 ? 4 : 3));
+// "p = 0.031" or "p < 0.0001"
+export const pEq = (p) => (p < 0.0001 ? "p < 0.0001" : "p = " + fmtP(p));
 const int = (n) => Math.round(n).toLocaleString("en-US");
 // Lower-case a label's first letter for use mid-sentence, but leave acronyms and codes (D1, SRM) alone
 const lower = (s) => (/^[A-Z][a-z]/.test(s) ? s.charAt(0).toLowerCase() + s.slice(1) : s);
@@ -130,7 +132,7 @@ export function readout(req) {
     label: "Sample ratio, all users",
     status: srmStatus,
     detail: `Test arm has ${pct(overall.share, 2)} of users (planned ${pct(split, 0)}): ${int(req.assigned.control)} control, ` +
-      `${int(req.assigned.test)} test. Chi-square p = ${fmtP(overall.p)}.`,
+      `${int(req.assigned.test)} test. Chi-square ${pEq(overall.p)}.`,
   });
   const segResults = (req.segments || []).map((s) => ({ ...s, ...srm(s.control, s.test, split) }));
   const worstSeg = segResults.reduce((w, s) => (!w || s.p < w.p ? s : w), null);
@@ -147,8 +149,8 @@ export function readout(req) {
       label: "Sample ratio, by segment",
       status: segStatus,
       detail: segStatus === "pass"
-        ? `All ${segResults.length} segments match the planned split (lowest p = ${fmtP(worstSeg.p)}, ${worstSeg.name}).`
-        : `${worstSeg.name}: ${int(worstSeg.control)} control, ${int(worstSeg.test)} test (${missing(worstSeg)}), p = ${fmtP(worstSeg.p)}.`,
+        ? `All ${segResults.length} segments match the planned split (lowest ${pEq(worstSeg.p)}, ${worstSeg.name}).`
+        : `${worstSeg.name}: ${int(worstSeg.control)} control, ${int(worstSeg.test)} test (${missing(worstSeg)}), ${pEq(worstSeg.p)}.`,
     });
   }
   const audits = (req.audits || []).map((a) => {
@@ -161,7 +163,7 @@ export function readout(req) {
     const status = overThreshold || lopsided ? "fail" : "pass";
     return { ...a, rc, rt, p: dp, status,
       detail: `${pct(rc, 2)} of control, ${pct(rt, 2)} of test (${a.control.num} vs ${a.test.num}); limit ${pct(a.threshold, 1)}` +
-        (lopsided && !overThreshold ? `; the arms differ (p = ${fmtP(dp)})` : "") + "." };
+        (lopsided && !overThreshold ? `; the arms differ (${pEq(dp)})` : "") + "." };
   });
   for (const a of audits) trust.items.push({ label: a.label, status: a.status, detail: a.detail });
   const trustFail = trust.items.some((i) => i.status === "fail");
@@ -171,15 +173,21 @@ export function readout(req) {
   // 2. Done? ------------------------------------------------------------------------------------------
   const plan = req.plan || {};
   const planned = plan.per_arm || 0;
+  const hasPlan = Boolean(plan.per_arm && plan.days);
   const enrolled = req.readout?.enrolment_days ?? plan.days;
   const minArm = Math.min(req.assigned.control, req.assigned.test);
   const sampleShare = planned ? minArm / planned : 1;
-  const final = enrolled >= (plan.days || 0) && sampleShare >= RULES.doneShare;
-  const done = { key: "done", title: "Is the test done?", status: final ? "pass" : "warn", items: [{
+  const final = hasPlan ? enrolled >= plan.days && sampleShare >= RULES.doneShare : true;
+  const done = { key: "done", title: "Is the test done?", status: final && hasPlan ? "pass" : "warn", items: [hasPlan ? {
     label: "Planned sample and duration",
     status: final ? "pass" : "warn",
     detail: `${enrolled} of ${plan.days} planned days enrolled; smaller arm at ${pct(sampleShare, 0)} of the planned ` +
       `${int(planned)} per arm.` + (final ? "" : " This is an interim look: the only call allowed is kill, for clear harm."),
+  } : {
+    label: "Planned sample and duration",
+    status: "warn",
+    detail: `No plan was supplied, so this is read as a finished test at the size it ran (${int(minArm)} in the ` +
+      "smaller arm). A sample size written down before the test is what protects against stopping at a lucky moment.",
   }] };
   steps.push(done);
 
@@ -219,7 +227,7 @@ export function readout(req) {
     label: primary.label,
     status: primaryClass === "WIN" ? "pass" : primaryClass === "INCONCLUSIVE" ? "warn" : "fail",
     detail: `${pct(pr.pc, 2)} control, ${pct(pr.pt, 2)} test: ${pts(pr.diff)} points (${relTxt(pr.rel)}), 95% CI ` +
-      `${pts(pr.lo)} to ${pts(pr.hi)}, p = ${fmtP(pr.p)}. Minimum worthwhile effect: ${primary.better === "down" ? "a fall" : "a rise"} ` +
+      `${pts(pr.lo)} to ${pts(pr.hi)}, ${pEq(pr.p)}. Minimum worthwhile effect: ${primary.better === "down" ? "a fall" : "a rise"} ` +
       `of ${pts(mweAbs, false)} points (${pct(primary.mwe_rel || 0, 1)}). ` + {
         WIN: "The whole interval is on the good side of zero.",
         LOSS: "The whole interval is on the bad side of zero.",
@@ -272,7 +280,7 @@ export function readout(req) {
     steps.push({ key: "secondary", title: "What else moved? (explains, never decides)", status: "info",
       items: secondary.map((m) => ({ label: m.label + (m.den_kind === "subset" ? " (subset)" : ""), status: "info",
         detail: `${pct(m.r.pc, 2)} control, ${pct(m.r.pt, 2)} test: ${pts(m.r.diff)} points (${relTxt(m.r.rel)}), ` +
-          `95% CI ${pts(m.r.lo)} to ${pts(m.r.hi)}, p = ${fmtP(m.r.p)}.` })) });
+          `95% CI ${pts(m.r.lo)} to ${pts(m.r.hi)}, ${pEq(m.r.p)}.` })) });
   }
 
   // 5. The call ---------------------------------------------------------------------------------------
@@ -322,7 +330,7 @@ export function readout(req) {
     } else {
       verdict = "keep_running";
       headline = `Keep running. Day ${req.readout?.day ?? "?"} of a ${plan.days}-day plan, ${pct(sampleShare, 0)} of the ` +
-        `planned sample. ${primary.label} is at ${pts(pr.diff)} points so far (p = ${fmtP(pr.p)}), but an early ` +
+        `planned sample. ${primary.label} is at ${pts(pr.diff)} points so far (${pEq(pr.p)}), but an early ` +
         `p-value isn't a result: stopping at the first p < 0.05 makes false wins several times likelier.`;
       next = `Read it again after day ${plan.days} with at least ${int(Math.ceil(RULES.doneShare * planned))} per arm. ` +
         "Only clear harm justifies stopping sooner.";
@@ -344,8 +352,8 @@ export function readout(req) {
       const most = unclear.reduce((m, g) => (g.needN > m.needN ? g : m));
       headline = `Promising, not proven safe: ${primTxt}, but the test can't rule out harm to ${list(unclear)} beyond ` +
         "the agreed margin.";
-      next = `Extend the test until ${lbl(most)} is ruled out (about ${int(most.needN)} per arm in total), or ramp to a ` +
-        `small share with an alarm on ${list(unclear)}.`;
+      next = `Extend the test until harm to ${lbl(most)} beyond its margin is ruled out (about ${int(most.needN)} per ` +
+        `arm in total), or ramp to a small share with an alarm on ${list(unclear)}.`;
     } else {
       verdict = "roll_out";
       headline = `Roll out: ${primTxt}` + (gain.est < mweAbs ? ", a real gain though smaller than the minimum worthwhile effect" : "") +
@@ -369,12 +377,16 @@ export function readout(req) {
   } else {
     verdict = "iterate";
     headline = `Can't tell yet: ${primTxt} is consistent with no effect and with the ${pts(mweAbs, false)}-point ` +
-      "minimum worth shipping.";
+      "minimum worth shipping." + (unclear.length ? ` Harm to ${list(unclear)} beyond the agreed margin can't be ruled out either.` : "");
     next = minArm >= RULES.doneShare * neededN
       ? "The test had the sample it needed and still can't separate zero from the minimum; a well-sized test lands " +
         "here about one time in five. Decide whether a rerun is worth it, or rethink the change so its effect is bigger."
       : `To settle it, rerun with about ${int(neededN)} per arm (this test had ${int(minArm)}), or rethink the change ` +
         "so its effect is bigger.";
+  }
+  if (!trustFail && trust.status === "warn") {
+    const warned = trust.items.filter((i) => i.status === "warn").map((i) => lower(i.label));
+    headline += ` One trust check is borderline (${warned.join(", ")}): find out why before relying on the size of the effect.`;
   }
   if (registered !== primary && !trustFail && final) {
     const rr = propDiff(registered.control, registered.test, RULES.primaryZ);

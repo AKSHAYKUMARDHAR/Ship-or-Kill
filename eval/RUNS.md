@@ -125,3 +125,18 @@ Same numbers as run 1. Engine 1.0, `site/shiporkill.js` sha256 `68c7326196a9`.
   guardrails without re-sizing.
 - **Peeking:** all 8 peeked nulls would have shipped under both baselines; Ship or Kill said "keep running"
   to all 8.
+
+## After the release run: engine 1.1 (no decision changes)
+
+These changes are for the web page and the public experiments. Re-running both sets with 1.1 gives the same
+verdict on all 136 cases (48 dev, 88 held-out) as the frozen 1.0. The published scores are 1.0's.
+
+- **Missing plan:** a request with no planned sample or days is read as a finished test at the size it ran,
+  with a warning that the plan is what guards against stopping early. The two public experiments published
+  no plan; no benchmark case is affected.
+- **Borderline trust checks are named in the headline:** a sample ratio p between 0.001 and 0.01 doesn't
+  block the call, but the headline now says so.
+- **Wording:**
+  - "p < 0.0001" instead of "p = < 0.0001";
+  - "until harm to X beyond its margin is ruled out";
+  - a "can't tell" headline now also names any guardrail that can't be ruled out.

@@ -1,0 +1,557 @@
+{
+ "examples": [
+  {
+   "kind": "illustrative",
+   "surface": "onboarding",
+   "unit": "installer; the invited partner inherits the installer's variant",
+   "plan": {
+    "per_arm": 8800,
+    "days": 14,
+    "split": 0.5,
+    "alpha": 0.05
+   },
+   "readout": {
+    "day": 16,
+    "enrolment_days": 14
+   },
+   "assigned": {
+    "control": 8800,
+    "test": 8800
+   },
+   "segments": [
+    {
+     "name": "android",
+     "control": 7040,
+     "test": 7012
+    },
+    {
+     "name": "ios",
+     "control": 1760,
+     "test": 1788
+    }
+   ],
+   "days": [],
+   "audits": [
+    {
+     "id": "shared_without_partner",
+     "label": "Shared game with no partner joined",
+     "threshold": 0.005,
+     "control": {
+      "num": 6,
+      "den": 8800
+     },
+     "test": {
+      "num": 8,
+      "den": 8800
+     }
+    },
+    {
+     "id": "partner_other_arm",
+     "label": "Partner joined from the other arm",
+     "threshold": 0.01,
+     "control": {
+      "num": 9,
+      "den": 3100
+     },
+     "test": {
+      "num": 7,
+      "den": 2990
+     }
+    }
+   ],
+   "source": "Illustrative counts built to match the question (not real data): 8,800 installers per arm, D0 activation 30.0% vs 28.8% (-4%, p = 0.08). The registration (minimum worthwhile effect 5%, activation margin -5%, uninstall and crash margins) is an assumption.",
+   "id": "interview-a",
+   "name": "The interview question, reading A: D1 measured on activated couples",
+   "hypothesis": "If couples pair before their first game, D1 retention will rise by at least 5% (relative), because couples who start together come back together.",
+   "metrics": [
+    {
+     "id": "d1_act",
+     "label": "D1 retention of activated couples",
+     "role": "primary",
+     "better": "up",
+     "den_kind": "subset",
+     "control": {
+      "num": 1320,
+      "den": 2640
+     },
+     "test": {
+      "num": 1343,
+      "den": 2534
+     },
+     "itt_twin": "d1",
+     "mwe_rel": 0.05
+    },
+    {
+     "id": "act",
+     "label": "D0 couple activation",
+     "role": "guardrail",
+     "better": "up",
+     "den_kind": "assigned",
+     "control": {
+      "num": 2640,
+      "den": 8800
+     },
+     "test": {
+      "num": 2534,
+      "den": 8800
+     },
+     "margin_rel": 0.05
+    },
+    {
+     "id": "un",
+     "label": "Uninstalls within 48 h",
+     "role": "guardrail",
+     "better": "down",
+     "den_kind": "assigned",
+     "control": {
+      "num": 748,
+      "den": 8800
+     },
+     "test": {
+      "num": 752,
+      "den": 8800
+     },
+     "margin_rel": 0.12
+    },
+    {
+     "id": "crash",
+     "label": "Users with a crash within 48 h",
+     "role": "guardrail",
+     "better": "down",
+     "den_kind": "assigned",
+     "control": {
+      "num": 176,
+      "den": 8800
+     },
+     "test": {
+      "num": 174,
+      "den": 8800
+     },
+     "margin_rel": 0.5
+    },
+    {
+     "id": "d1",
+     "label": "D1 retention",
+     "role": "secondary",
+     "better": "up",
+     "den_kind": "assigned",
+     "control": {
+      "num": 2244,
+      "den": 8800
+     },
+     "test": {
+      "num": 2283,
+      "den": 8800
+     }
+    }
+   ]
+  },
+  {
+   "kind": "illustrative",
+   "surface": "onboarding",
+   "unit": "installer; the invited partner inherits the installer's variant",
+   "plan": {
+    "per_arm": 8800,
+    "days": 14,
+    "split": 0.5,
+    "alpha": 0.05
+   },
+   "readout": {
+    "day": 16,
+    "enrolment_days": 14
+   },
+   "assigned": {
+    "control": 8800,
+    "test": 8800
+   },
+   "segments": [
+    {
+     "name": "android",
+     "control": 7040,
+     "test": 7012
+    },
+    {
+     "name": "ios",
+     "control": 1760,
+     "test": 1788
+    }
+   ],
+   "days": [],
+   "audits": [
+    {
+     "id": "shared_without_partner",
+     "label": "Shared game with no partner joined",
+     "threshold": 0.005,
+     "control": {
+      "num": 6,
+      "den": 8800
+     },
+     "test": {
+      "num": 8,
+      "den": 8800
+     }
+    },
+    {
+     "id": "partner_other_arm",
+     "label": "Partner joined from the other arm",
+     "threshold": 0.01,
+     "control": {
+      "num": 9,
+      "den": 3100
+     },
+     "test": {
+      "num": 7,
+      "den": 2990
+     }
+    }
+   ],
+   "source": "Illustrative counts built to match the question (not real data): 8,800 installers per arm, D0 activation 30.0% vs 28.8% (-4%, p = 0.08). The registration (minimum worthwhile effect 5%, activation margin -5%, uninstall and crash margins) is an assumption.",
+   "id": "interview-b",
+   "name": "The interview question, reading B: D1 measured per installer",
+   "hypothesis": "If couples pair before their first game, D1 retention will rise by at least 5% (relative), because couples who start together come back together.",
+   "metrics": [
+    {
+     "id": "d1",
+     "label": "D1 retention",
+     "role": "primary",
+     "better": "up",
+     "den_kind": "assigned",
+     "control": {
+      "num": 2244,
+      "den": 8800
+     },
+     "test": {
+      "num": 2379,
+      "den": 8800
+     },
+     "mwe_rel": 0.05
+    },
+    {
+     "id": "act",
+     "label": "D0 couple activation",
+     "role": "guardrail",
+     "better": "up",
+     "den_kind": "assigned",
+     "control": {
+      "num": 2640,
+      "den": 8800
+     },
+     "test": {
+      "num": 2534,
+      "den": 8800
+     },
+     "margin_rel": 0.05
+    },
+    {
+     "id": "un",
+     "label": "Uninstalls within 48 h",
+     "role": "guardrail",
+     "better": "down",
+     "den_kind": "assigned",
+     "control": {
+      "num": 748,
+      "den": 8800
+     },
+     "test": {
+      "num": 752,
+      "den": 8800
+     },
+     "margin_rel": 0.12
+    },
+    {
+     "id": "crash",
+     "label": "Users with a crash within 48 h",
+     "role": "guardrail",
+     "better": "down",
+     "den_kind": "assigned",
+     "control": {
+      "num": 176,
+      "den": 8800
+     },
+     "test": {
+      "num": 174,
+      "den": 8800
+     },
+     "margin_rel": 0.5
+    },
+    {
+     "id": "d1_act",
+     "label": "D1 retention of activated couples",
+     "role": "secondary",
+     "better": "up",
+     "den_kind": "subset",
+     "control": {
+      "num": 1320,
+      "den": 2640
+     },
+     "test": {
+      "num": 1395,
+      "den": 2534
+     }
+    }
+   ]
+  },
+  {
+   "id": "udacity-screener",
+   "kind": "public",
+   "name": "Udacity: free-trial screener",
+   "surface": "sign-up",
+   "hypothesis": "If students who click \"Start free trial\" are asked how many hours a week they can study, and warned when it is under 5, fewer students who are likely to quit will enrol (gross conversion falls by at least 1 point) without fewer students paying (net conversion falls by no more than 0.75 points).",
+   "unit": "cookie that clicked \"Start free trial\" (the screener appears after the click)",
+   "source": "Final-project data of Udacity's A/B Testing course (by Google): daily counts per arm, 11 October to 16 November; enrolments and payments for the first 23 days only, so the metrics use those days. The thresholds are the course's own practical-significance boundaries. Presented by the course as a real Udacity experiment; treat it as a teaching dataset.",
+   "extra_checks": [
+    "The course's other sanity checks also pass over all 37 days: pageviews 345,543 vs 344,660 (p = 0.29), clicks 28,378 vs 28,325 (p = 0.82)."
+   ],
+   "plan": {
+    "split": 0.5,
+    "alpha": 0.05
+   },
+   "readout": {},
+   "assigned": {
+    "control": 17293,
+    "test": 17260
+   },
+   "segments": [],
+   "days": [
+    {
+     "name": "1",
+     "control": 687,
+     "test": 686
+    },
+    {
+     "name": "2",
+     "control": 779,
+     "test": 785
+    },
+    {
+     "name": "3",
+     "control": 909,
+     "test": 884
+    },
+    {
+     "name": "4",
+     "control": 836,
+     "test": 827
+    },
+    {
+     "name": "5",
+     "control": 837,
+     "test": 832
+    },
+    {
+     "name": "6",
+     "control": 823,
+     "test": 788
+    },
+    {
+     "name": "7",
+     "control": 748,
+     "test": 780
+    },
+    {
+     "name": "8",
+     "control": 632,
+     "test": 652
+    },
+    {
+     "name": "9",
+     "control": 691,
+     "test": 697
+    },
+    {
+     "name": "10",
+     "control": 861,
+     "test": 860
+    },
+    {
+     "name": "11",
+     "control": 867,
+     "test": 864
+    },
+    {
+     "name": "12",
+     "control": 838,
+     "test": 801
+    },
+    {
+     "name": "13",
+     "control": 665,
+     "test": 642
+    },
+    {
+     "name": "14",
+     "control": 673,
+     "test": 697
+    },
+    {
+     "name": "15",
+     "control": 691,
+     "test": 669
+    },
+    {
+     "name": "16",
+     "control": 708,
+     "test": 693
+    },
+    {
+     "name": "17",
+     "control": 759,
+     "test": 771
+    },
+    {
+     "name": "18",
+     "control": 736,
+     "test": 736
+    },
+    {
+     "name": "19",
+     "control": 739,
+     "test": 727
+    },
+    {
+     "name": "20",
+     "control": 734,
+     "test": 728
+    },
+    {
+     "name": "21",
+     "control": 706,
+     "test": 722
+    },
+    {
+     "name": "22",
+     "control": 681,
+     "test": 695
+    },
+    {
+     "name": "23",
+     "control": 693,
+     "test": 724
+    }
+   ],
+   "metrics": [
+    {
+     "id": "gross",
+     "label": "Gross conversion (enrolments per click)",
+     "role": "primary",
+     "better": "down",
+     "den_kind": "assigned",
+     "control": {
+      "num": 3785,
+      "den": 17293
+     },
+     "test": {
+      "num": 3423,
+      "den": 17260
+     },
+     "mwe_rel": 0.04569
+    },
+    {
+     "id": "net",
+     "label": "Net conversion (payments per click)",
+     "role": "guardrail",
+     "better": "up",
+     "den_kind": "assigned",
+     "control": {
+      "num": 2033,
+      "den": 17293
+     },
+     "test": {
+      "num": 1945,
+      "den": 17260
+     },
+     "margin_rel": 0.0638
+    },
+    {
+     "id": "retention",
+     "label": "Payments per enrolment",
+     "role": "secondary",
+     "better": "up",
+     "den_kind": "subset",
+     "control": {
+      "num": 2033,
+      "den": 3785
+     },
+     "test": {
+      "num": 1945,
+      "den": 3423
+     }
+    }
+   ],
+   "audits": []
+  },
+  {
+   "id": "cookie-cats",
+   "kind": "public",
+   "name": "Cookie Cats: first gate at level 40 instead of 30",
+   "surface": "progression",
+   "hypothesis": "If the first gate (a forced wait) moves from level 30 to level 40, 7-day retention will rise by at least 2% (relative), because players get further into the game before the first block.",
+   "unit": "player, assigned at install",
+   "source": "Real A/B test in the mobile game Cookie Cats (Tactile Entertainment), 90,189 players, published by Rasmus B\u00e5\u00e5th for DataCamp. No test plan was published, so this reading supplies its own registration: primary D7 retention (minimum worthwhile effect 2% relative), guardrail D1 retention (margin 2% relative). The call doesn't depend on those choices: D7 retention fell.",
+   "extra_checks": [
+    "Players who never played a round can't have been affected by where the gate is: 4.33% of control, 4.52% of test. A difference that size is ordinary noise (two-proportion p = 0.17), so the arms look comparable apart from the sample ratio warning."
+   ],
+   "plan": {
+    "split": 0.5,
+    "alpha": 0.05
+   },
+   "readout": {},
+   "assigned": {
+    "control": 44700,
+    "test": 45489
+   },
+   "segments": [],
+   "days": [],
+   "metrics": [
+    {
+     "id": "d7",
+     "label": "D7 retention",
+     "role": "primary",
+     "better": "up",
+     "den_kind": "assigned",
+     "control": {
+      "num": 8502,
+      "den": 44700
+     },
+     "test": {
+      "num": 8279,
+      "den": 45489
+     },
+     "mwe_rel": 0.02
+    },
+    {
+     "id": "d1",
+     "label": "D1 retention",
+     "role": "guardrail",
+     "better": "up",
+     "den_kind": "assigned",
+     "control": {
+      "num": 20034,
+      "den": 44700
+     },
+     "test": {
+      "num": 20119,
+      "den": 45489
+     },
+     "margin_rel": 0.02
+    },
+    {
+     "id": "r30",
+     "label": "Played 30+ rounds in 14 days",
+     "role": "secondary",
+     "better": "up",
+     "den_kind": "assigned",
+     "control": {
+      "num": 16656,
+      "den": 44700
+     },
+     "test": {
+      "num": 16613,
+      "den": 45489
+     }
+    }
+   ],
+   "audits": []
+  }
+ ]
+}
