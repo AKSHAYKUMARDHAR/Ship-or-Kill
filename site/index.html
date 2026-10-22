@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ship or Kill</title>
+<meta name="description" content="An A/B test readout that makes the call (roll out, iterate or kill) and shows its working. Tested on 136 simulated couples-app experiments with known answers and two public experiments.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <h1>Ship or Kill</h1>
+    <p class="lede">An A/B test readout that makes the call (<strong>roll out, iterate or kill</strong>) and shows its
+      working. It checks the data first, refuses to call a test early, reads the primary metric per assigned user,
+      and only passes a guardrail when the test rules out harm beyond the agreed margin.
+      Paste counts from PostHog, Mixpanel, SQL or a spreadsheet. Nothing leaves your browser.</p>
+    <div class="scores" id="scores" aria-label="Benchmark results"></div>
+    <p class="small score-note" id="score-note"></p>
+  </div>
+</header>
+
+<nav class="tabs wrap" role="tablist" aria-label="Sections">
+  <button role="tab" id="tab-read" aria-controls="read" aria-selected="true">Read a test</button>
+  <button role="tab" id="tab-plan" aria-controls="plan" aria-selected="false">Plan a test</button>
+  <button role="tab" id="tab-bench" aria-controls="bench" aria-selected="false">Benchmark</button>
+  <button role="tab" id="tab-how" aria-controls="how" aria-selected="false">How it works</button>
+</nav>
+
+<main class="wrap">
+  <!-- READ ------------------------------------------------------------------------------------------- -->
+  <section id="read" role="tabpanel" aria-labelledby="tab-read">
+    <div class="controls">
+      <label>Example
+        <select id="example"></select></label>
+      <span class="small" id="example-kind"></span>
+    </div>
+    <p class="hypothesis" id="hypothesis"></p>
+
+    <article class="verdict-card" id="verdict" aria-live="polite"></article>
+
+    <section class="panel">
+      <h2>What moved <span class="small">(right is better for every metric; bars are 95% intervals for the primary, 90% for guardrails)</span></h2>
+      <div id="chart" class="chart"></div>
+      <div class="chart-key small">
+        <span><i class="tick mwe"></i> minimum worthwhile effect</span>
+        <span><i class="tick margin"></i> guardrail margin</span>
+        <span><i class="tick zero"></i> no change</span>
+      </div>
+    </section>
+
+    <section class="panel" id="steps"></section>
+
+    <section class="panel">
+      <details id="editor" open>
+        <summary><h2>Change the numbers</h2></summary>
+        <p class="small">Counts per arm. "Users" is the denominator: everyone assigned whose window has closed, or for a
+          subset metric, only the users who got through that step. Thresholds are relative to control: the minimum
+          worthwhile effect for the primary, the margin for a guardrail.</p>
+        <div class="grid4">
+          <label>Planned users per arm <input type="number" min="0" id="f-per-arm"></label>
+          <label>Planned days <input type="number" min="0" id="f-days"></label>
+          <label>Days enrolled so far <input type="number" min="0" id="f-enrolled"></label>
+          <label>Test share <input type="number" min="0.05" max="0.95" step="0.05" id="f-split"></label>
+          <label>Assigned, control <input type="number" min="0" id="f-a-control"></label>
+          <label>Assigned, test <input type="number" min="0" id="f-a-test"></label>
+        </div>
+        <p class="small">Leave planned users or days empty if the test had no written plan.</p>
+        <div class="table-scroll">
+          <table class="metrics-table" id="metrics-table">
+            <thead><tr><th>Metric</th><th>Role</th><th>Better</th><th>Control count</th><th>Control users</th>
+              <th>Test count</th><th>Test users</th><th>Threshold %</th><th>Subset</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="controls">
+          <button type="button" id="add-metric" class="btn">Add a metric</button>
+          <label id="twin-wrap">Per-assigned version of a subset primary
+            <select id="f-twin"></select></label>
+        </div>
+        <details class="json">
+          <summary>Segments, tracking audits and the full request as JSON</summary>
+          <p class="small">Segments (for the sample ratio check by segment) and tracking audits (counts of events no
+            real user can produce) are easiest to edit here. The format is documented in the
+            <a href="https://github.com/AKSHAYKUMARDHAR/Ship-or-Kill#the-request">README</a>.</p>
+          <textarea id="json" spellcheck="false" rows="16"></textarea>
+          <div class="controls"><button type="button" class="btn" id="load-json">Read this JSON</button>
+            <span class="small" id="json-msg" role="status"></span></div>
+        </details>
+      </details>
+    </section>
+  </section>
+
+  <!-- PLAN ------------------------------------------------------------------------------------------- -->
+  <section id="plan" role="tabpanel" aria-labelledby="tab-plan" hidden>
+    <section class="panel">
+      <h2>Size a test for every check, not just the primary</h2>
+      <p class="small">A real winner ships only if the primary wins <em>and</em> every guardrail rules out harm. So the
+        test needs enough users for each check. Following Spotify's correction (Schultzberg, Ankargren and Frånberg,
+        2024), each of the checks gets an equal share of the miss rate.</p>
+      <div class="grid4">
+        <label>Primary metric <input type="text" id="p-name" value="D0 couple activation"></label>
+        <label>Control rate % <input type="number" step="0.1" id="p-base" value="25"></label>
+        <label>Minimum worthwhile effect, % relative <input type="number" step="0.5" id="p-mwe" value="8"></label>
+        <label>Eligible users per day (both arms) <input type="number" id="p-daily" value="1500"></label>
+        <label>Test share <input type="number" step="0.05" min="0.05" max="0.95" id="p-split" value="0.5"></label>
+        <label>Significance (two-sided) <input type="number" step="0.01" id="p-alpha" value="0.05"></label>
+        <label>Chance a real winner passes every check <input type="number" step="0.05" id="p-power" value="0.8"></label>
+      </div>
+      <div class="table-scroll">
+        <table class="metrics-table" id="guard-table">
+          <thead><tr><th>Guardrail</th><th>Control rate %</th><th>Margin, % relative</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <button type="button" class="btn" id="add-guard">Add a guardrail</button>
+    </section>
+    <div id="plan-out"></div>
+  </section>
+
+  <!-- BENCHMARK --------------------------------------------------------------------------------------- -->
+  <section id="bench" role="tabpanel" aria-labelledby="tab-bench" hidden>
+    <section class="panel">
+      <h2>How it was tested</h2>
+      <p>136 simulated A/B tests on a couples app, generated from raw event logs. Each test has a true effect known
+        exactly. They were frozen in git before any engine code existed. 48 were used for development; 88 were held out
+        and run once with the engine frozen. Three of the eleven case types appear only in the held-out set. The
+        comparison is the rule most teams use (ship if the primary is up with p &lt; 0.05), with and without a
+        significance veto on guardrails.
+        <a href="https://github.com/AKSHAYKUMARDHAR/Ship-or-Kill/blob/main/data/BENCHMARK_GUIDE.md">How the cases were built</a> ·
+        <a href="https://github.com/AKSHAYKUMARDHAR/Ship-or-Kill/blob/main/eval/RUNS.md">Every run</a></p>
+      <div class="controls">
+        <label>Set <select id="b-split"><option value="holdout" selected>Held-out release run (88)</option>
+          <option value="dev">Development (48)</option></select></label>
+      </div>
+      <div class="table-scroll"><table class="data" id="b-summary"></table></div>
+      <h3>By case type</h3>
+      <div class="table-scroll"><table class="data" id="b-family"></table></div>
+    </section>
+    <div class="controls">
+      <label>Case type <select id="b-fam"><option value="all">Any</option></select></label>
+      <label>Ship or Kill was <select id="b-outcome"><option value="all">Any</option>
+        <option value="right">Right</option><option value="missed">Too cautious (missed a winner)</option>
+        <option value="wrong">Wrong</option></select></label>
+    </div>
+    <p class="count small" id="b-count" aria-live="polite"></p>
+    <div id="b-list"></div>
+  </section>
+
+  <!-- HOW ---------------------------------------------------------------------------------------------- -->
+  <section id="how" role="tabpanel" aria-labelledby="tab-how" hidden>
+    <section class="panel how">
+      <h2>How it decides, in order</h2>
+      <ol>
+        <li><strong>Can the data be trusted?</strong> A sample ratio check (chi-square against the planned split,
+          overall and by segment, failing at p &lt; 0.001) and tracking audits: counts of events no real user can
+          produce, such as a shared game with no partner, a user in both arms, or a partner in the other arm. Any
+          failure means "fix the data first".</li>
+        <li><strong>Is the test done?</strong> Before the planned days and 90% of the planned sample, the only call
+          allowed is kill, for clear harm (p &lt; 0.001). Otherwise: keep running.</li>
+        <li><strong>Did the primary move, per assigned user?</strong> A 95% interval for the difference. A primary
+          measured on a subset chosen after assignment ("D1 retention of activated couples") is replaced by its
+          per-assigned version, because filtering out weaker users raises a subset rate on its own.</li>
+        <li><strong>Can we rule out harm?</strong> Each guardrail passes only if the worst plausible harm (top of a
+          90% interval, a one-sided 5% non-inferiority test) is within the margin agreed before the test.</li>
+        <li><strong>The call.</strong> Roll out: the primary wins and every guardrail passes. Iterate: it wins but a
+          guardrail is breached or can't be ruled out, or the result can't tell. Kill: the primary is worse, the
+          test rules out a worthwhile gain, or there's harm with no proven gain.</li>
+      </ol>
+      <p>The rule is the one in Spotify's "Risk-aware product decisions in A/B tests with multiple metrics" (2024):
+        superior on the success metric, non-inferior on every guardrail. The engine is one JavaScript file, and the
+        page runs the same file the benchmark scored.</p>
+      <p><a href="https://github.com/AKSHAYKUMARDHAR/Ship-or-Kill">Code</a> ·
+        <a href="https://github.com/AKSHAYKUMARDHAR/Ship-or-Kill/blob/main/docs/PRD.md">Product requirements</a> ·
+        <a href="https://github.com/AKSHAYKUMARDHAR/Ship-or-Kill/blob/main/docs/TEST_PLAN_EXAMPLE.md">Example test plan for a couples app</a> ·
+        <a href="https://github.com/AKSHAYKUMARDHAR/Ship-or-Kill/blob/main/sql/readout.sql">SQL template</a></p>
+    </section>
+  </section>
+</main>
+
+<footer class="wrap small foot">Built by Akshay Dhar with Claude Code ·
+  <a href="https://akshaykumardhar.github.io/">Portfolio</a> ·
+  <a href="https://github.com/AKSHAYKUMARDHAR/Ship-or-Kill">GitHub</a></footer>
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
