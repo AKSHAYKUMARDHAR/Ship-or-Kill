@@ -500,7 +500,19 @@ async function start() {
   bench = bm.cases;
   $("#example").innerHTML = `<optgroup label="Worked examples">${examples.map((e) => `<option value="${e.id}">${esc(e.name)}</option>`).join("")}</optgroup>
     <optgroup label="Your own"><option value="blank">Start from a blank test</option></optgroup>`;
-  setRequest(examples[0], examples[0]);
+  // Links can open a worked example (?example=udacity-screener) or a benchmark case (?case=H16)
+  const q = new URLSearchParams(location.search);
+  const ex0 = examples.find((e) => e.id === q.get("example"));
+  const case0 = bench.find((c) => c.id === (q.get("case") || "").toUpperCase());
+  if (case0) {
+    ensureCaseOption(case0);
+    $("#example").value = `case:${case0.id}`;
+    setRequest(case0.request, benchMeta(case0));
+  } else {
+    const first = ex0 || examples[0];
+    $("#example").value = first.id;
+    setRequest(first, first);
+  }
   renderScores();
   renderBenchTables();
   renderPlan();

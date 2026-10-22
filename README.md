@@ -73,7 +73,7 @@ Held-out release run, engine frozen at commit e81e1d7. Each figure is cases out 
 | Broken tests caught | **24/24** | 0/24 | 0/24 |
 | False data alarms | 0/64 | 0/64 | 0/64 |
 | Real winners killed | 0/24 | 0/24 | 0/24 |
-| Real winners held back (clean data) | **7/16 (44%)** | 2/16 (12%) | 2/16 (12%) |
+| Real winners held back (clean data) | **7/16 (44%)** | 2/16 (13%) | 2/16 (13%) |
 
 **The release gate passed:**
 - wrong roll-outs ≤ 5%;

@@ -29,8 +29,13 @@ def load(split: str, results: Path | None = None) -> list[dict]:
     return out, res
 
 
+def pct(x: float) -> str:
+    """Percent rounded half up, as the web page shows it (Python's format rounds half to even)."""
+    return f"{int(x * 100 + 0.5)}%"
+
+
 def rate(num: int, den: int) -> str:
-    return f"{num}/{den} ({num / den:.0%})" if den else "-"
+    return f"{num}/{den} ({pct(num / den)})" if den else "-"
 
 
 def metrics(rows: list[dict], rule: str) -> dict:
@@ -83,9 +88,9 @@ def report(split: str, results: Path | None = None) -> str:
     nw = lambda rule: ms[rule]["wrong_rollouts"][0] / max(ms[rule]["wrong_rollouts"][1], 1)  # noqa: E731
     mw = lambda rule: ms[rule]["missed_winners"][0] / max(ms[rule]["missed_winners"][1], 1)  # noqa: E731
     lines += ["", "## Hypothesis", "",
-              f"- Naive ships ≥ 20% of non-winners: {nw('naive'):.0%} → {'yes' if nw('naive') >= 0.20 else 'no'}",
-              f"- Ship or Kill ships ≤ 5%: {nw('engine'):.0%} → {'yes' if nw('engine') <= 0.05 else 'no'}",
-              f"- Misses ≤ 15 points more winners than naive: {mw('engine'):.0%} vs {mw('naive'):.0%} "
+              f"- Naive ships ≥ 20% of non-winners: {pct(nw('naive'))} → {'yes' if nw('naive') >= 0.20 else 'no'}",
+              f"- Ship or Kill ships ≤ 5%: {pct(nw('engine'))} → {'yes' if nw('engine') <= 0.05 else 'no'}",
+              f"- Misses ≤ 15 points more winners than naive: {pct(mw('engine'))} vs {pct(mw('naive'))} "
               f"({(mw('engine') - mw('naive')) * 100:+.0f} points) → {'yes' if mw('engine') - mw('naive') <= 0.15 else 'no'}"]
 
     lines += ["", "## By family", "", "| Family | Truth | n | Ship or Kill | Naive | Naive + guardrails |",

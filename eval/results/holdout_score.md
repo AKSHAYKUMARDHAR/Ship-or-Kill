@@ -7,7 +7,7 @@
 | Data problems caught | 24/24 (100%) | 0/24 (0%) | 0/24 (0%) |
 | False data alarms (of clean cases) | 0/64 (0%) | 0/64 (0%) | 0/64 (0%) |
 | Winners killed | 0/24 (0%) | 0/24 (0%) | 0/24 (0%) |
-| Missed winners (of clean winners) | 7/16 (44%) | 2/16 (12%) | 2/16 (12%) |
+| Missed winners (of clean winners) | 7/16 (44%) | 2/16 (13%) | 2/16 (13%) |
 
 ## Release gate (Ship or Kill)
 
@@ -21,7 +21,7 @@
 
 - Naive ships ≥ 20% of non-winners: 61% → yes
 - Ship or Kill ships ≤ 5%: 0% → yes
-- Misses ≤ 15 points more winners than naive: 44% vs 12% (+31 points) → no
+- Misses ≤ 15 points more winners than naive: 44% vs 13% (+31 points) → no
 
 ## By family
 

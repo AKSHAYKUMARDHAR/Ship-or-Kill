@@ -83,7 +83,7 @@ Same numbers as run 1. Engine 1.0, `site/shiporkill.js` sha256 `68c7326196a9`.
 | Data problems caught | **24/24 (100%)** | 0/24 | 0/24 |
 | False data alarms (of clean cases) | 0/64 | 0/64 | 0/64 |
 | Winners killed | 0/24 | 0/24 | 0/24 |
-| Missed winners (of clean winners) | **7/16 (44%)** | 2/16 (12%) | 2/16 (12%) |
+| Missed winners (of clean winners) | **7/16 (44%)** | 2/16 (13%) | 2/16 (13%) |
 
 | Family | Truth | n | Ship or Kill | Naive | Naive + guardrails |
 | --- | --- | --- | --- | --- | --- |
@@ -104,7 +104,7 @@ Same numbers as run 1. Engine 1.0, `site/shiporkill.js` sha256 `68c7326196a9`.
 - The naive rule ships at least 20% of non-winners: **yes, 61%**.
 - Ship or Kill ships at most 5%: **yes, 0%**.
 - Ship or Kill misses at most 15 points more true winners than the naive rule: **no**. It missed 44% against
-  12%, 31 points more.
+  13%, 31 points more.
 
 **What the run shows:**
 
