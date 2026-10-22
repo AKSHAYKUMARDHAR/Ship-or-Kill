@@ -111,9 +111,10 @@ Same numbers as run 1. Engine 1.0, `site/shiporkill.js` sha256 `68c7326196a9`.
 - **The trust checks did the most work.**
   - 24 of 24 broken tests were stopped, against 0 for both baselines.
   - The naive rule would have shipped 1 of 8 SRM bugs and 7 of 8 tracking bugs.
-  - It would have shipped 5 of 8 split-couple tests, a design that hides most of a real effect.
-- **The denominator trap fooled the usual rule 7 times in 8.** D1 retention "of activated couples" rose in
-  every one of them, while D1 per installer truly fell. A significance veto on activation caught 6 of the 7.
+  - It would have shipped 5 of 8 split-couple tests. Those changes are real winners, so shipping them does no
+    harm. But the measured effect is diluted to about half, which is the wrong number to plan the next test on.
+- **The denominator trap fooled the usual rule 7 times in 8.** In every one, D1 retention "of activated
+  couples" truly rose while D1 per installer truly fell. A significance veto on activation caught 6 of the 7.
   Reading per installer caught all 8.
 - **Non-inferiority matters most when harm is close to the margin.** On the quiet-harm family (never seen
   in development), a significance veto still shipped 3 harmful variants of 8. Non-inferiority shipped none.
