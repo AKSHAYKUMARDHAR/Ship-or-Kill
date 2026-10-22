@@ -73,4 +73,54 @@ Same numbers as run 1. Engine 1.0, `site/shiporkill.js` sha256 `68c7326196a9`.
 
 ## Held-out (88 cases: 11 families x 8, three never seen in development)
 
-Not run yet.
+**Release run 1**, engine frozen at commit e81e1d7 (sha256 `68c7326196a9`), run once
+([results](results/holdout.json), [score](results/holdout_score.md)). **The gate passed.**
+
+| | Ship or Kill | Naive (primary p < 0.05) | Naive + significant-guardrail veto |
+| --- | --- | --- | --- |
+| Wrong roll-outs (of non-winners) | **0/64 (0%)** | 39/64 (61%) | 19/64 (30%) |
+| Harmful roll-outs (of harmful) | **0/48 (0%)** | 31/48 (65%) | 11/48 (23%) |
+| Data problems caught | **24/24 (100%)** | 0/24 | 0/24 |
+| False data alarms (of clean cases) | 0/64 | 0/64 | 0/64 |
+| Winners killed | 0/24 | 0/24 | 0/24 |
+| Missed winners (of clean winners) | **7/16 (44%)** | 2/16 (12%) | 2/16 (12%) |
+
+| Family | Truth | n | Ship or Kill | Naive | Naive + guardrails |
+| --- | --- | --- | --- | --- | --- |
+| clean_win | winner | 8 | roll out 6, iterate 2 | roll out 8 | roll out 8 |
+| clean_null | neutral | 8 | iterate 3, kill 5 | iterate 8 | iterate 8 |
+| clean_loss | harmful | 8 | kill 8 | iterate 1, kill 7 | iterate 1, kill 7 |
+| denominator_trap | harmful | 8 | kill 8 | roll out 7, iterate 1 | roll out 1, iterate 7 |
+| guardrail_loud | harmful | 8 | iterate 8 | roll out 8 | iterate 8 |
+| srm_bug | harmful (data) | 8 | fix data 8 | roll out 1, iterate 7 | roll out 1, iterate 7 |
+| tracking_bug | harmful (data) | 8 | fix data 8 | roll out 7, iterate 1 | roll out 6, iterate 2 |
+| peeking | neutral | 8 | keep running 8 | roll out 8 | roll out 8 |
+| guardrail_quiet (unseen) | harmful | 8 | iterate 8 | roll out 8 | roll out 3, iterate 5 |
+| split_couples (unseen) | winner (data) | 8 | fix data 8 | roll out 5, iterate 3 | roll out 5, iterate 3 |
+| underpowered_win (unseen) | winner | 8 | roll out 3, iterate 5 | roll out 6, iterate 2 | roll out 6, iterate 2 |
+
+**Hypothesis, as stated in the PRD before any case existed:**
+
+- The naive rule ships at least 20% of non-winners: **yes, 61%**.
+- Ship or Kill ships at most 5%: **yes, 0%**.
+- Ship or Kill misses at most 15 points more true winners than the naive rule: **no**. It missed 44% against
+  12%, 31 points more.
+
+**What the run shows:**
+
+- **The trust checks did the most work.**
+  - 24 of 24 broken tests were stopped, against 0 for both baselines.
+  - The naive rule would have shipped 1 of 8 SRM bugs and 7 of 8 tracking bugs.
+  - It would have shipped 5 of 8 split-couple tests, a design that hides most of a real effect.
+- **The denominator trap fooled the usual rule 7 times in 8.** D1 retention "of activated couples" rose in
+  every one of them, while D1 per installer truly fell. A significance veto on activation caught 6 of the 7.
+  Reading per installer caught all 8.
+- **Non-inferiority matters most when harm is close to the margin.** On the quiet-harm family (never seen
+  in development), a significance veto still shipped 3 harmful variants of 8. Non-inferiority shipped none.
+- **The cost is real, and it has one main cause.** 5 of the 7 missed winners had a guardrail, usually
+  crashes, that the test was too small to rule out. The other 2 were too small to tell at all. Development
+  showed the same thing, and the planner now sizes tests for every check. The benchmark's tests were sized
+  the common way, for the primary only, so this cost is what a team pays when it adds non-inferiority
+  guardrails without re-sizing.
+- **Peeking:** all 8 peeked nulls would have shipped under both baselines; Ship or Kill said "keep running"
+  to all 8.
