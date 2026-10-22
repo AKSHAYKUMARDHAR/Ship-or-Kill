@@ -1,0 +1,759 @@
+{
+ "split": "dev",
+ "engine_version": "1.0",
+ "engine_sha256": "68c7326196a9",
+ "rows": [
+  {
+   "id": "D01",
+   "verdict": "keep_running",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Keep running. Day 9 of a 14-day plan, 64% of the planned sample. D0 couple activation is at +2.2 points so far (p = 0.035), but an early p-value isn't a result: stopping at the first p < 0.05 makes false wins several times likelier.",
+   "next": "Read it again after day 14 with at least 5,580 per arm. Only clear harm justifies stopping sooner.",
+   "primary": "WIN",
+   "guardrails": {
+    "d1": "UNCLEAR",
+    "un": "PASS",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  },
+  {
+   "id": "D02",
+   "verdict": "kill",
+   "naive": "roll_out",
+   "naive_guard": "iterate",
+   "headline": "Kill: D1 retention -1.1 points (95% CI -2.2 to -0.07). The variant makes the primary metric worse. The registered D1 retention of activated couples moved +8.8%, but that counts only users who got through a step the variant changed, so it rewards losing the weaker ones.",
+   "next": "Keep control. Write down what the result says about the hypothesis before the next idea.",
+   "primary": "LOSS",
+   "guardrails": {
+    "act": "UNCLEAR",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D03",
+   "verdict": "fix_data",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Fix the data first: the arms aren't the planned 50% split (worst in android_old). Until the cause is found, no metric in this test can be trusted.",
+   "next": "Find what drops users from one arm before exposure is logged: a crash on launch, a redirect, a filter or a slow-loading screen. Start with android_old, where the gap is largest. Then fix and rerun; the numbers from this run can't be repaired.",
+   "primary": "FLAT",
+   "guardrails": {
+    "d1": "UNCLEAR",
+    "un": "UNCLEAR",
+    "crash": "PASS"
+   },
+   "trust": [
+    "Sample ratio, all users",
+    "Sample ratio, by segment"
+   ]
+  },
+  {
+   "id": "D04",
+   "verdict": "kill",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Kill: D0 couple activation -0.88 points (95% CI -2.3 to +0.58). The test rules out a gain of 2.1 points or more, the minimum worth shipping.",
+   "next": "Keep control, the simpler product. The idea doesn't move the metric enough to be worth its cost.",
+   "primary": "FLAT",
+   "guardrails": {
+    "d1": "UNCLEAR",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D05",
+   "verdict": "iterate",
+   "naive": "roll_out",
+   "naive_guard": "iterate",
+   "headline": "It works, but at a cost: D1 retention +1.7 points (95% CI +0.42 to +2.9), while push disabled within 48 h and uninstalls within 48 h were harmed beyond the agreed margin.",
+   "next": "Keep what drives D1 retention and change what harms push disabled within 48 h and uninstalls within 48 h (frequency, timing, opt-out), then test the new version.",
+   "primary": "WIN",
+   "guardrails": {
+    "push": "BREACH",
+    "un": "BREACH",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D06",
+   "verdict": "keep_running",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Keep running. Day 3 of a 14-day plan, 24% of the planned sample. D0 couple activation is at +2.3 points so far (p = 0.046), but an early p-value isn't a result: stopping at the first p < 0.05 makes false wins several times likelier.",
+   "next": "Read it again after day 14 with at least 13,758 per arm. Only clear harm justifies stopping sooner.",
+   "primary": "WIN",
+   "guardrails": {
+    "d1": "PASS",
+    "un": "PASS",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  },
+  {
+   "id": "D07",
+   "verdict": "fix_data",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Fix the data first: audit failed: shared game with no partner joined. Until the cause is found, no metric in this test can be trusted.",
+   "next": "Check the tracking behind \"shared game with no partner joined\" in the test build: an event fired by the wrong screen, or fired twice, inflates one arm. Then fix and rerun; the numbers from this run can't be repaired.",
+   "primary": "WIN",
+   "guardrails": {
+    "d1": "UNCLEAR",
+    "un": "PASS",
+    "crash": "BREACH"
+   },
+   "trust": [
+    "Shared game with no partner joined"
+   ]
+  },
+  {
+   "id": "D08",
+   "verdict": "iterate",
+   "naive": "roll_out",
+   "naive_guard": "iterate",
+   "headline": "It works, but at a cost: D1 retention +6.8 points (95% CI +4.9 to +8.6), while push disabled within 48 h and uninstalls within 48 h were harmed beyond the agreed margin.",
+   "next": "Keep what drives D1 retention and change what harms push disabled within 48 h and uninstalls within 48 h (frequency, timing, opt-out), then test the new version.",
+   "primary": "WIN",
+   "guardrails": {
+    "push": "BREACH",
+    "un": "BREACH",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  },
+  {
+   "id": "D09",
+   "verdict": "roll_out",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Roll out: D1 retention +3.3 points (95% CI +2.1 to +4.5), and every guardrail is ruled out beyond its margin.",
+   "next": "Ramp to 100%. Keep a small holdback for a few weeks if the change is large, to confirm the effect lasts.",
+   "primary": "WIN",
+   "guardrails": {
+    "push": "PASS",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D10",
+   "verdict": "kill",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Kill: D0 couple activation -0.57 points (95% CI -1.5 to +0.33). The test rules out a gain of 1.3 points or more, the minimum worth shipping.",
+   "next": "Keep control, the simpler product. The idea doesn't move the metric enough to be worth its cost.",
+   "primary": "FLAT",
+   "guardrails": {
+    "d1": "UNCLEAR",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D11",
+   "verdict": "roll_out",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Roll out: D1 retention +2.1 points (95% CI +0.74 to +3.4), and every guardrail is ruled out beyond its margin.",
+   "next": "Ramp to 100%. Keep a small holdback for a few weeks if the change is large, to confirm the effect lasts.",
+   "primary": "WIN",
+   "guardrails": {
+    "act": "PASS",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D12",
+   "verdict": "iterate",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Promising, not proven safe: D0 couple activation +4.5 points (95% CI +3.0 to +6.0), but the test can't rule out harm to users with a crash within 48 h beyond the agreed margin.",
+   "next": "Extend the test until users with a crash within 48 h is ruled out (about 7,761 per arm in total), or ramp to a small share with an alarm on users with a crash within 48 h.",
+   "primary": "WIN",
+   "guardrails": {
+    "d1": "PASS",
+    "un": "PASS",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  },
+  {
+   "id": "D13",
+   "verdict": "iterate",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Can't tell yet: D1 retention +0.79 points (95% CI -0.75 to +2.3) is consistent with no effect and with the 2.1-point minimum worth shipping. The registered D1 retention of activated couples moved +7.5%, but that counts only users who got through a step the variant changed, so it rewards losing the weaker ones.",
+   "next": "To settle it, rerun with about 7,990 per arm (this test had 7,109), or rethink the change so its effect is bigger.",
+   "primary": "INCONCLUSIVE",
+   "guardrails": {
+    "act": "UNCLEAR",
+    "un": "UNCLEAR",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D14",
+   "verdict": "fix_data",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Fix the data first: the arms aren't the planned 50% split (worst in android_old). Until the cause is found, no metric in this test can be trusted.",
+   "next": "Find what drops users from one arm before exposure is logged: a crash on launch, a redirect, a filter or a slow-loading screen. Start with android_old, where the gap is largest. Then fix and rerun; the numbers from this run can't be repaired.",
+   "primary": "WIN",
+   "guardrails": {
+    "act": "PASS",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": [
+    "Sample ratio, all users",
+    "Sample ratio, by segment"
+   ]
+  },
+  {
+   "id": "D15",
+   "verdict": "iterate",
+   "naive": "roll_out",
+   "naive_guard": "iterate",
+   "headline": "It works, but at a cost: D1 retention +2.1 points (95% CI +0.78 to +3.4), while push disabled within 48 h and uninstalls within 48 h were harmed beyond the agreed margin.",
+   "next": "Keep what drives D1 retention and change what harms push disabled within 48 h and uninstalls within 48 h (frequency, timing, opt-out), then test the new version.",
+   "primary": "WIN",
+   "guardrails": {
+    "push": "BREACH",
+    "un": "BREACH",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D16",
+   "verdict": "fix_data",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Fix the data first: the arms aren't the planned 50% split (worst in android_old). Until the cause is found, no metric in this test can be trusted.",
+   "next": "Find what drops users from one arm before exposure is logged: a crash on launch, a redirect, a filter or a slow-loading screen. Start with android_old, where the gap is largest. Then fix and rerun; the numbers from this run can't be repaired.",
+   "primary": "FLAT",
+   "guardrails": {
+    "act": "PASS",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": [
+    "Sample ratio, all users",
+    "Sample ratio, by segment"
+   ]
+  },
+  {
+   "id": "D17",
+   "verdict": "kill",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Kill: D1 retention -1.4 points (95% CI -2.5 to -0.31). The variant makes the primary metric worse. The registered D1 retention of activated couples moved +4.9%, but that counts only users who got through a step the variant changed, so it rewards losing the weaker ones.",
+   "next": "Keep control. Write down what the result says about the hypothesis before the next idea.",
+   "primary": "LOSS",
+   "guardrails": {
+    "act": "PASS",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D18",
+   "verdict": "fix_data",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Fix the data first: audit failed: shared game with no partner joined. Until the cause is found, no metric in this test can be trusted.",
+   "next": "Check the tracking behind \"shared game with no partner joined\" in the test build: an event fired by the wrong screen, or fired twice, inflates one arm. Then fix and rerun; the numbers from this run can't be repaired.",
+   "primary": "WIN",
+   "guardrails": {
+    "d1": "UNCLEAR",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": [
+    "Shared game with no partner joined"
+   ]
+  },
+  {
+   "id": "D19",
+   "verdict": "kill",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Kill: D1 retention +0.09 points (95% CI -0.77 to +0.94). The test rules out a gain of 1.3 points or more, the minimum worth shipping.",
+   "next": "Keep control, the simpler product. The idea doesn't move the metric enough to be worth its cost.",
+   "primary": "FLAT",
+   "guardrails": {
+    "push": "PASS",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D20",
+   "verdict": "roll_out",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Roll out: D0 couple activation +3.1 points (95% CI +1.4 to +4.7), and every guardrail is ruled out beyond its margin.",
+   "next": "Ramp to 100%. Keep a small holdback for a few weeks if the change is large, to confirm the effect lasts.",
+   "primary": "WIN",
+   "guardrails": {
+    "d1": "PASS",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D21",
+   "verdict": "kill",
+   "naive": "kill",
+   "naive_guard": "kill",
+   "headline": "Kill: D1 retention -1.5 points (95% CI -2.4 to -0.53). The variant makes the primary metric worse.",
+   "next": "Keep control. Write down what the result says about the hypothesis before the next idea.",
+   "primary": "LOSS",
+   "guardrails": {
+    "act": "PASS",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D22",
+   "verdict": "kill",
+   "naive": "kill",
+   "naive_guard": "kill",
+   "headline": "Kill: D0 couple activation -1.7 points (95% CI -2.7 to -0.65). The variant makes the primary metric worse.",
+   "next": "Keep control. Write down what the result says about the hypothesis before the next idea.",
+   "primary": "LOSS",
+   "guardrails": {
+    "d1": "UNCLEAR",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D23",
+   "verdict": "keep_running",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Keep running. Day 7 of a 14-day plan, 50% of the planned sample. D1 retention is at +1.9 points so far (p = 0.038), but an early p-value isn't a result: stopping at the first p < 0.05 makes false wins several times likelier.",
+   "next": "Read it again after day 14 with at least 13,717 per arm. Only clear harm justifies stopping sooner.",
+   "primary": "WIN",
+   "guardrails": {
+    "act": "PASS",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D24",
+   "verdict": "iterate",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Can't tell yet: D0 couple activation +0.67 points (95% CI -0.36 to +1.7) is consistent with no effect and with the 1.5-point minimum worth shipping.",
+   "next": "The test had the sample it needed and still can't separate zero from the minimum; a well-sized test lands here about one time in five. Decide whether a rerun is worth it, or rethink the change so its effect is bigger.",
+   "primary": "INCONCLUSIVE",
+   "guardrails": {
+    "d1": "PASS",
+    "un": "UNCLEAR",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D25",
+   "verdict": "fix_data",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Fix the data first: audit failed: shared game with no partner joined. Until the cause is found, no metric in this test can be trusted.",
+   "next": "Check the tracking behind \"shared game with no partner joined\" in the test build: an event fired by the wrong screen, or fired twice, inflates one arm. Then fix and rerun; the numbers from this run can't be repaired.",
+   "primary": "WIN",
+   "guardrails": {
+    "d1": "PASS",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": [
+    "Shared game with no partner joined"
+   ]
+  },
+  {
+   "id": "D26",
+   "verdict": "kill",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Kill: D1 retention -1.3 points (95% CI -2.9 to +0.38). The test rules out a gain of 2.4 points or more, the minimum worth shipping. The registered D1 retention of activated couples moved +0.8%, but that counts only users who got through a step the variant changed, so it rewards losing the weaker ones.",
+   "next": "Keep control, the simpler product. The idea doesn't move the metric enough to be worth its cost.",
+   "primary": "FLAT",
+   "guardrails": {
+    "act": "UNCLEAR",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D27",
+   "verdict": "fix_data",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Fix the data first: audit failed: shared game with no partner joined. Until the cause is found, no metric in this test can be trusted.",
+   "next": "Check the tracking behind \"shared game with no partner joined\" in the test build: an event fired by the wrong screen, or fired twice, inflates one arm. Then fix and rerun; the numbers from this run can't be repaired.",
+   "primary": "FLAT",
+   "guardrails": {
+    "d1": "BREACH",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": [
+    "Shared game with no partner joined"
+   ]
+  },
+  {
+   "id": "D28",
+   "verdict": "kill",
+   "naive": "kill",
+   "naive_guard": "kill",
+   "headline": "Kill: D0 couple activation -1.5 points (95% CI -2.8 to -0.28). The variant makes the primary metric worse.",
+   "next": "Keep control. Write down what the result says about the hypothesis before the next idea.",
+   "primary": "LOSS",
+   "guardrails": {
+    "d1": "PASS",
+    "un": "UNCLEAR",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D29",
+   "verdict": "kill",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Kill: D1 retention -0.12 points (95% CI -1.3 to +1.1). The test rules out a gain of 1.7 points or more, the minimum worth shipping. The registered D1 retention of activated couples moved +2.2%, but that counts only users who got through a step the variant changed, so it rewards losing the weaker ones.",
+   "next": "Keep control, the simpler product. The idea doesn't move the metric enough to be worth its cost.",
+   "primary": "FLAT",
+   "guardrails": {
+    "act": "UNCLEAR",
+    "un": "PASS",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  },
+  {
+   "id": "D30",
+   "verdict": "fix_data",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Fix the data first: the arms aren't the planned 50% split (worst in android_old). Until the cause is found, no metric in this test can be trusted.",
+   "next": "Find what drops users from one arm before exposure is logged: a crash on launch, a redirect, a filter or a slow-loading screen. Start with android_old, where the gap is largest. Then fix and rerun; the numbers from this run can't be repaired.",
+   "primary": "INCONCLUSIVE",
+   "guardrails": {
+    "d1": "PASS",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": [
+    "Sample ratio, all users",
+    "Sample ratio, by segment"
+   ]
+  },
+  {
+   "id": "D31",
+   "verdict": "iterate",
+   "naive": "roll_out",
+   "naive_guard": "iterate",
+   "headline": "It works, but at a cost: D1 retention +3.5 points (95% CI +2.3 to +4.6), while push disabled within 48 h and uninstalls within 48 h were harmed beyond the agreed margin.",
+   "next": "Keep what drives D1 retention and change what harms push disabled within 48 h and uninstalls within 48 h (frequency, timing, opt-out), then test the new version.",
+   "primary": "WIN",
+   "guardrails": {
+    "push": "BREACH",
+    "un": "BREACH",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D32",
+   "verdict": "iterate",
+   "naive": "roll_out",
+   "naive_guard": "iterate",
+   "headline": "It works, but at a cost: D1 retention +2.5 points (95% CI +1.5 to +3.6), while push disabled within 48 h and uninstalls within 48 h were harmed beyond the agreed margin.",
+   "next": "Keep what drives D1 retention and change what harms push disabled within 48 h and uninstalls within 48 h (frequency, timing, opt-out), then test the new version.",
+   "primary": "WIN",
+   "guardrails": {
+    "push": "BREACH",
+    "un": "BREACH",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D33",
+   "verdict": "fix_data",
+   "naive": "roll_out",
+   "naive_guard": "iterate",
+   "headline": "Fix the data first: audit failed: shared game with no partner joined. Until the cause is found, no metric in this test can be trusted.",
+   "next": "Check the tracking behind \"shared game with no partner joined\" in the test build: an event fired by the wrong screen, or fired twice, inflates one arm. Then fix and rerun; the numbers from this run can't be repaired.",
+   "primary": "WIN",
+   "guardrails": {
+    "d1": "PASS",
+    "un": "PASS",
+    "crash": "UNCLEAR"
+   },
+   "trust": [
+    "Shared game with no partner joined"
+   ]
+  },
+  {
+   "id": "D34",
+   "verdict": "fix_data",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Fix the data first: the arms aren't the planned 50% split (worst in android_old). Until the cause is found, no metric in this test can be trusted.",
+   "next": "Find what drops users from one arm before exposure is logged: a crash on launch, a redirect, a filter or a slow-loading screen. Start with android_old, where the gap is largest. Then fix and rerun; the numbers from this run can't be repaired.",
+   "primary": "FLAT",
+   "guardrails": {
+    "d1": "PASS",
+    "un": "UNCLEAR",
+    "crash": "UNCLEAR"
+   },
+   "trust": [
+    "Sample ratio, all users",
+    "Sample ratio, by segment"
+   ]
+  },
+  {
+   "id": "D35",
+   "verdict": "iterate",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Promising, not proven safe: D1 retention +4.2 points (95% CI +2.7 to +5.8), but the test can't rule out harm to users with a crash within 48 h beyond the agreed margin.",
+   "next": "Extend the test until users with a crash within 48 h is ruled out (about 10,802 per arm in total), or ramp to a small share with an alarm on users with a crash within 48 h.",
+   "primary": "WIN",
+   "guardrails": {
+    "push": "PASS",
+    "un": "PASS",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  },
+  {
+   "id": "D36",
+   "verdict": "fix_data",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Fix the data first: audit failed: shared game with no partner joined. Until the cause is found, no metric in this test can be trusted.",
+   "next": "Check the tracking behind \"shared game with no partner joined\" in the test build: an event fired by the wrong screen, or fired twice, inflates one arm. Then fix and rerun; the numbers from this run can't be repaired.",
+   "primary": "FLAT",
+   "guardrails": {
+    "d1": "UNCLEAR",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": [
+    "Shared game with no partner joined"
+   ]
+  },
+  {
+   "id": "D37",
+   "verdict": "keep_running",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Keep running. Day 4 of a 14-day plan, 29% of the planned sample. D1 retention is at +3.4 points so far (p = 0.014), but an early p-value isn't a result: stopping at the first p < 0.05 makes false wins several times likelier.",
+   "next": "Read it again after day 14 with at least 12,603 per arm. Only clear harm justifies stopping sooner.",
+   "primary": "WIN",
+   "guardrails": {
+    "act": "PASS",
+    "un": "UNCLEAR",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  },
+  {
+   "id": "D38",
+   "verdict": "kill",
+   "naive": "kill",
+   "naive_guard": "kill",
+   "headline": "Kill: D1 retention -2.3 points (95% CI -3.3 to -1.4). The variant makes the primary metric worse.",
+   "next": "Keep control. Write down what the result says about the hypothesis before the next idea.",
+   "primary": "LOSS",
+   "guardrails": {
+    "push": "PASS",
+    "un": "UNCLEAR",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D39",
+   "verdict": "fix_data",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Fix the data first: the arms aren't the planned 50% split (worst in android_old). Until the cause is found, no metric in this test can be trusted.",
+   "next": "Find what drops users from one arm before exposure is logged: a crash on launch, a redirect, a filter or a slow-loading screen. Start with android_old, where the gap is largest. Then fix and rerun; the numbers from this run can't be repaired.",
+   "primary": "FLAT",
+   "guardrails": {
+    "push": "PASS",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": [
+    "Sample ratio, all users",
+    "Sample ratio, by segment"
+   ]
+  },
+  {
+   "id": "D40",
+   "verdict": "iterate",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Promising, not proven safe: D1 retention +5.6 points (95% CI +4.0 to +7.3), but the test can't rule out harm to users with a crash within 48 h beyond the agreed margin.",
+   "next": "Extend the test until users with a crash within 48 h is ruled out (about 10,985 per arm in total), or ramp to a small share with an alarm on users with a crash within 48 h.",
+   "primary": "WIN",
+   "guardrails": {
+    "act": "PASS",
+    "un": "PASS",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  },
+  {
+   "id": "D41",
+   "verdict": "kill",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Kill: D0 couple activation -0.44 points (95% CI -1.6 to +0.69). The test rules out a gain of 1.7 points or more, the minimum worth shipping.",
+   "next": "Keep control, the simpler product. The idea doesn't move the metric enough to be worth its cost.",
+   "primary": "FLAT",
+   "guardrails": {
+    "d1": "UNCLEAR",
+    "un": "PASS",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D42",
+   "verdict": "keep_running",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Keep running. Day 5 of a 14-day plan, 37% of the planned sample. D1 retention is at +4.3 points so far (p = 0.0094), but an early p-value isn't a result: stopping at the first p < 0.05 makes false wins several times likelier.",
+   "next": "Read it again after day 14 with at least 6,405 per arm. Only clear harm justifies stopping sooner.",
+   "primary": "WIN",
+   "guardrails": {
+    "act": "PASS",
+    "un": "UNCLEAR",
+    "crash": "PASS"
+   },
+   "trust": []
+  },
+  {
+   "id": "D43",
+   "verdict": "kill",
+   "naive": "iterate",
+   "naive_guard": "iterate",
+   "headline": "Kill: D1 retention +0.33 points (95% CI -1.2 to +1.9). The test rules out a gain of 2.2 points or more, the minimum worth shipping.",
+   "next": "Keep control, the simpler product. The idea doesn't move the metric enough to be worth its cost.",
+   "primary": "FLAT",
+   "guardrails": {
+    "push": "PASS",
+    "un": "UNCLEAR",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  },
+  {
+   "id": "D44",
+   "verdict": "kill",
+   "naive": "kill",
+   "naive_guard": "kill",
+   "headline": "Kill: D1 retention -1.8 points (95% CI -2.7 to -0.85). The variant makes the primary metric worse.",
+   "next": "Keep control. Write down what the result says about the hypothesis before the next idea.",
+   "primary": "LOSS",
+   "guardrails": {
+    "act": "PASS",
+    "un": "PASS",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  },
+  {
+   "id": "D45",
+   "verdict": "keep_running",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Keep running. Day 3 of a 14-day plan, 23% of the planned sample. D0 couple activation is at +3.8 points so far (p = 0.014), but an early p-value isn't a result: stopping at the first p < 0.05 makes false wins several times likelier.",
+   "next": "Read it again after day 14 with at least 8,863 per arm. Only clear harm justifies stopping sooner.",
+   "primary": "WIN",
+   "guardrails": {
+    "d1": "PASS",
+    "un": "UNCLEAR",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  },
+  {
+   "id": "D46",
+   "verdict": "iterate",
+   "naive": "roll_out",
+   "naive_guard": "iterate",
+   "headline": "It works, but at a cost: D1 retention +2.0 points (95% CI +0.77 to +3.2), while push disabled within 48 h and uninstalls within 48 h were harmed beyond the agreed margin.",
+   "next": "Keep what drives D1 retention and change what harms push disabled within 48 h and uninstalls within 48 h (frequency, timing, opt-out), then test the new version.",
+   "primary": "WIN",
+   "guardrails": {
+    "push": "BREACH",
+    "un": "BREACH",
+    "crash": "UNCLEAR"
+   },
+   "trust": [
+    "Sample ratio, by segment"
+   ]
+  },
+  {
+   "id": "D47",
+   "verdict": "kill",
+   "naive": "roll_out",
+   "naive_guard": "roll_out",
+   "headline": "Kill: D1 retention -1.9 points (95% CI -3.4 to -0.40). The variant makes the primary metric worse. The registered D1 retention of activated couples moved +6.1%, but that counts only users who got through a step the variant changed, so it rewards losing the weaker ones.",
+   "next": "Keep control. Write down what the result says about the hypothesis before the next idea.",
+   "primary": "LOSS",
+   "guardrails": {
+    "act": "UNCLEAR",
+    "un": "UNCLEAR",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  },
+  {
+   "id": "D48",
+   "verdict": "kill",
+   "naive": "kill",
+   "naive_guard": "kill",
+   "headline": "Kill: D0 couple activation -2.4 points (95% CI -3.6 to -1.2). The variant makes the primary metric worse.",
+   "next": "Keep control. Write down what the result says about the hypothesis before the next idea.",
+   "primary": "LOSS",
+   "guardrails": {
+    "d1": "BREACH",
+    "un": "UNCLEAR",
+    "crash": "UNCLEAR"
+   },
+   "trust": []
+  }
+ ]
+}

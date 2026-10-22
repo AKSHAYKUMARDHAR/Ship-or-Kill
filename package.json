@@ -1,0 +1,10 @@
+{
+  "name": "ship-or-kill",
+  "private": true,
+  "type": "module",
+  "description": "A/B test readout engine and benchmark runner",
+  "scripts": {
+    "test": "node --test tests/engine.test.js",
+    "bench": "node eval/run.js"
+  }
+}
